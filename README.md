@@ -1,49 +1,51 @@
 # ClaudeShift-CLI
 
-> **Claude Code Model & Settings Switcher** — cross-platform (Windows, Linux, macOS). Port Python dari `Change-Config-CC` (Bash).
+> **Claude Code Model & Settings Switcher** — cross-platform (Windows, Linux, macOS). Python port of [`Change-Config-CC`](https://github.com/Fauzan-Fz/Change-Config-CC) (Bash).
 
-Manage Claude Code models, API endpoints & auth tokens via `~/.claude/settings.json` tanpa edit JSON manual.
+Easily manage Claude Code models, API endpoints, and auth tokens via `~/.claude/settings.json` without manually editing JSON.
 
 ## ✨ Features
 
 | Feature | Description |
 |---------|-------------|
-| 🔄 Model Switching | Ganti main model & semua varian (Opus, Sonnet, Haiku, Fable, Small/Fast) |
-| 📏 Context Window | `model[500k]`, `model[1m]`, `model[2m]` |
-| 🌐 Endpoint | Switch proxy / official / custom `ANTHROPIC_BASE_URL` |
-| 🔑 Auth Token | Update `ANTHROPIC_AUTH_TOKEN` dengan mask |
-| 💾 Backup/Restore | Auto-backup sebelum perubahan + manual backup/restore |
-| 🧹 Clean Backups | Hapus `2,3,4` / `all` / `keep:5` |
-| 🎨 Interactive Menu | `rich` + `questionary`, warna konsisten |
-| ⚡ Direct Mode | `claudeshift "anthropic/claude-sonnet[1m]"` |
-| 🚀 Update Check | Cek versi terbaru dari GitHub |
+| 🔄 Model Switching | Switch main model and all variants (Opus, Sonnet, Haiku, Fable, Small/Fast) |
+| 📏 Context Window | Set per-model context: `model[500k]`, `model[1m]`, `model[2m]` |
+| 🌐 Endpoint | Switch between local proxy, official Anthropic API, or custom `ANTHROPIC_BASE_URL` |
+| 🔑 Auth Token | Update `ANTHROPIC_AUTH_TOKEN` securely (masked display) |
+| 💾 Backup / Restore | Auto-backup before every change + manual backup & restore |
+| 🧹 Clean Backups | Delete with multi-select `2,3,4`, `all`, or `keep:5` |
+| 🎨 Interactive Menu | Color-coded `rich` + `questionary` prompts, consistent layout |
+| ⚡ Direct Mode | `claudeshift "anthropic/claude-sonnet[1m]"` for quick updates |
+| 🚀 Update Check | Check for the latest version from GitHub |
 
 ## 📦 Installation
 
 ```bash
-# dari source (dev)
+# from source (dev)
 git clone https://github.com/Fauzan-Fz/ClaudeShift-CLI.git
 cd ClaudeShift-CLI
 pip install -e .
 
-# atau isolated
+# or isolated (recommended)
 pipx install .
 
-# nanti setelah publish ke PyPI
+# once published to PyPI
 pip install claudeshift
 pipx install claudeshift
 ```
 
-Python 3.9+ • Windows / Linux / macOS • settings file: `~/.claude/settings.json` (Windows: `%USERPROFILE%\.claude\settings.json` — sama, via `Path.home()`)
+**Requirements:** Python 3.9+ · Windows / Linux / macOS
+
+**Settings file:** `~/.claude/settings.json` on all platforms (Windows resolves to `%USERPROFILE%\.claude\settings.json` via `Path.home()`).
 
 ## 🚀 Usage
 
 ```bash
 claudeshift                              # interactive menu
 claude-shift                             # alias
-change-cc                                # alias (kompatibel)
+change-cc                                # alias (compatible with Change-Config-CC)
 
-claudeshift "anthropic/claude-sonnet[1m]" # direct set ANTHROPIC_MODEL
+claudeshift "anthropic/claude-sonnet[1m]" # directly set ANTHROPIC_MODEL
 claudeshift -v / --version
 claudeshift -l / --list
 claudeshift -U / --update
@@ -65,7 +67,7 @@ claudeshift -h / --help
 
 ## 🔧 Settings File
 
-Tool membaca & menulis `~/.claude/settings.json`:
+ClaudeShift reads and writes `~/.claude/settings.json`:
 
 ```json
 {
@@ -83,12 +85,12 @@ Tool membaca & menulis `~/.claude/settings.json`:
 }
 ```
 
-Auto-backup dibuat di folder yang sama: `settings.json.backup.YYYYMMDD_HHMMSS`
+Auto-backups are saved alongside it as `settings.json.backup.YYYYMMDD_HHMMSS`.
 
-## 🧪 Dev
+## 🧪 Development
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -e .
 claudeshift --help
 claudeshift --list
@@ -101,4 +103,4 @@ MIT — see [LICENSE](LICENSE)
 
 ## 🔗 Related
 
-- Original Bash version: [Fauzan-Fz/Change-Config-CC](https://github.com/Fauzan-Fz/Change-Config-CC) (Linux-only, requires `jq`)
+- Original Bash version (Linux-only, requires `jq`): [Fauzan-Fz/Change-Config-CC](https://github.com/Fauzan-Fz/Change-Config-CC)
