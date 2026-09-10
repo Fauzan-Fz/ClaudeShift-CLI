@@ -33,7 +33,7 @@ def restore_backup(src: Path) -> bool:
     shutil.copy2(src, SETTINGS_FILE)
     return True
 
-# ── clean helpers (used by CLI; keep logic testable) ────────
+# clean helpers - kept testable for CLI
 
 def parse_clean_selection(raw: str, total: int) -> list[int] | str:
     """
@@ -47,7 +47,6 @@ def parse_clean_selection(raw: str, total: int) -> list[int] | str:
     m = re.fullmatch(r"keep:(\d+)", raw)
     if m:
         return f"keep:{int(m.group(1))}"
-    # comma-separated numbers
     if re.fullmatch(r"[0-9,\s]+", raw):
         nums = [int(x) for x in re.split(r"[\s,]+", raw) if x.strip()]
         if not nums:
@@ -55,7 +54,6 @@ def parse_clean_selection(raw: str, total: int) -> list[int] | str:
         for n in nums:
             if n < 1 or n > total:
                 raise ValueError(f"Index {n} out of range 1..{total}.")
-        # dedupe, sorted
         return sorted(set(nums))
     raise ValueError("Use 2,3,4  or  all  or  keep:N")
 
