@@ -1,8 +1,8 @@
 # ClaudeShift-CLI
 
-> **Claude Code Model & Settings Switcher** — cross-platform (Windows, Linux, macOS). Python port of [`Change-Config-CC`](https://github.com/Fauzan-Fz/Change-Config-CC) (Bash).
+> **Claude Code Model & Settings Switcher** — Windows, Linux, macOS. Python port of [`Change-Config-CC`](https://github.com/Fauzan-Fz/Change-Config-CC) (Bash).
 
-Easily manage Claude Code models, API endpoints, and auth tokens via `~/.claude/settings.json` without manually editing JSON.
+Manage Claude Code models, API endpoints, and auth tokens in `~/.claude/settings.json` without editing JSON by hand.
 
 ## ✨ Features
 
@@ -12,7 +12,7 @@ Easily manage Claude Code models, API endpoints, and auth tokens via `~/.claude/
 | 📏 Context Window | Set per-model context: `model[500k]`, `model[1m]`, `model[2m]` |
 | 🌐 Endpoint | Switch between local proxy, official Anthropic API, or custom `ANTHROPIC_BASE_URL` |
 | 🔑 Auth Token | Update `ANTHROPIC_AUTH_TOKEN` securely (masked display) |
-| 💾 Backup / Restore | Auto-backup before every change + manual backup & restore |
+| 💾 Backup / Restore | Auto-backup before every change + manual backup and restore |
 | 🧹 Clean Backups | Delete with multi-select `2,3,4`, `all`, or `keep:5` |
 | 🎨 Interactive Menu | Color-coded `rich` + `questionary` prompts, consistent layout |
 | ⚡ Direct Mode | `claudeshift "anthropic/claude-sonnet[1m]"` for quick updates |
@@ -21,17 +21,12 @@ Easily manage Claude Code models, API endpoints, and auth tokens via `~/.claude/
 ## 📦 Installation
 
 ```bash
-# from source (dev)
 git clone https://github.com/Fauzan-Fz/ClaudeShift-CLI.git
 cd ClaudeShift-CLI
 pip install -e .
 
-# or isolated (recommended)
+# isolated install (recommended)
 pipx install .
-
-# once published to PyPI
-pip install claudeshift
-pipx install claudeshift
 ```
 
 **Requirements:** Python 3.9+ · Windows / Linux / macOS

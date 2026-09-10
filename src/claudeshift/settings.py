@@ -10,8 +10,6 @@ from typing import Any
 
 from .config import CLAUDE_DIR, DEFAULT_SETTINGS, SETTINGS_FILE, STANDARD_MODELS
 
-# ── file I/O ─────────────────────────────────────────────────
-
 def _load() -> dict[str, Any]:
     if not SETTINGS_FILE.exists():
         return {}
@@ -67,8 +65,6 @@ def create_backup() -> Path | None:
     shutil.copy2(SETTINGS_FILE, dest)
     return dest
 
-# ── model variant helpers ────────────────────────────────────
-
 def get_all_model_variants() -> list[tuple[str, str, str]]:
     """Return [(key, label, value)] in STANDARD_MODELS order."""
     data = _load()
@@ -79,16 +75,12 @@ def get_all_model_variants() -> list[tuple[str, str, str]]:
         out.append((key, label, val))
     return out
 
-# ── masking ──────────────────────────────────────────────────
-
 def mask_token(token: str) -> str:
     if not token:
         return "(not set)"
     if len(token) > 3:
         return token[:3] + "x" * (len(token) - 3)
     return "***"
-
-# ── token/context helpers ────────────────────────────────────
 
 def format_tokens(n: int) -> str:
     if n >= 1_000_000:
@@ -122,8 +114,6 @@ def build_model_with_context(model: str, context: str | None) -> str:
     if context:
         return f"{base}[{context}]"
     return base
-
-# ── display helper ───────────────────────────────────────────
 
 def current_config_snapshot() -> dict[str, str]:
     data = _load()

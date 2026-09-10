@@ -46,8 +46,6 @@ Q_STYLE = QStyle([
     ("selected", "fg:green"),
 ])
 
-# ── display ──────────────────────────────────────────────────
-
 def show_current_config() -> None:
     snap = current_config_snapshot()
     model_variants = get_all_model_variants()
@@ -68,12 +66,8 @@ def show_current_config() -> None:
     console.print(Panel(table, title=f"Current Claude Code Configuration  (v{__version__})", border_style="cyan", padding=(0, 1)))
     console.print(f"[dim]Settings: {SETTINGS_FILE}[/dim]\n")
 
-
 def show_version() -> None:
     console.print(f"[cyan]ClaudeShift[/cyan] v[bold]{__version__}[/bold]  [dim]({SETTINGS_FILE})[/dim]")
-
-
-# ── endpoint ─────────────────────────────────────────────────
 
 def change_endpoint() -> None:
     console.print("\n[bold cyan]═══ Change Endpoint URL (ANTHROPIC_BASE_URL) ═══[/bold cyan]\n")
@@ -101,9 +95,6 @@ def change_endpoint() -> None:
     update_env("ANTHROPIC_BASE_URL", choice)
     console.print(f"[green]✓ Updated ANTHROPIC_BASE_URL → {choice}[/green]")
 
-
-# ── auth token ───────────────────────────────────────────────
-
 def change_auth_token() -> None:
     console.print("\n[bold cyan]═══ Change API Key (ANTHROPIC_AUTH_TOKEN) ═══[/bold cyan]\n")
     from .settings import mask_token
@@ -118,9 +109,6 @@ def change_auth_token() -> None:
     update_env("ANTHROPIC_AUTH_TOKEN", token)
     console.print(f"[green]✓ Auth token updated → {mask_token(token)}[/green]")
 
-
-# ── helpers for model context ────────────────────────────────
-
 def _pick_variant(prompt: str = "Select model variant:") -> tuple[str, str, str] | None:
     variants = get_all_model_variants()
     choices = []
@@ -129,8 +117,7 @@ def _pick_variant(prompt: str = "Select model variant:") -> tuple[str, str, str]
         choices.append(questionary.Choice(f"{label} ({key}) = {disp}", value=(key, label, val)))
     choices.append(questionary.Choice("Back", value=None))
     result = questionary.select(prompt, choices=choices, style=Q_STYLE).ask()
-    return result  # None or tuple
-
+    return result
 
 def _pick_context(current_model: str, current_ctx: str) -> tuple[str | None, str | None]:
     """Return (new_model_value or None for cancel, action)."""
@@ -148,9 +135,6 @@ def _pick_context(current_model: str, current_ctx: str) -> tuple[str | None, str
     console.print(f"[dim]Model:[/dim] {current_model or '(not set)'}  [dim]Context:[/dim] {current_ctx or '(none)'}\n")
     picked = questionary.select("Select context:", choices=choices, style=Q_STYLE).ask()
     return picked, current_model
-
-
-# ── change model context (model[ctx]) ───────────────────────
 
 def change_model_context() -> None:
     while True:
@@ -195,8 +179,7 @@ def change_model_context() -> None:
                 console.print("[yellow]No input — skipping.[/yellow]")
                 continue
             custom = custom.strip()
-            # validate
-            from .settings import parse_tokens
+                        from .settings import parse_tokens
 
             if parse_tokens(custom) is None:
                 console.print(f"[red]Invalid context '{custom}' — use like 500k, 1m[/red]")
@@ -227,13 +210,9 @@ def change_model_context() -> None:
         if new_value is not None:
             update_env(key, new_value)
             console.print(f"[green]✓ {label} ({key}) → {new_value}[/green]")
-            # ask if continue or back
-            cont = questionary.confirm("Change another variant?", default=False, style=Q_STYLE).ask()
+                        cont = questionary.confirm("Change another variant?", default=False, style=Q_STYLE).ask()
             if not cont:
                 return
-
-
-# ── change model variants (full name) ────────────────────────
 
 def change_model_variants() -> None:
     while True:
@@ -251,7 +230,7 @@ def change_model_variants() -> None:
         if not new_model:
             console.print("[yellow]Empty — cancelled.[/yellow]")
             continue
-        # preserve context if there was one
+        # keep existing context suffix if present
         if ctx:
             new_value = f"{new_model}[{ctx}]"
         else:
@@ -261,9 +240,6 @@ def change_model_variants() -> None:
         cont = questionary.confirm("Change another variant?", default=False, style=Q_STYLE).ask()
         if not cont:
             return
-
-
-# ── change main model (.model) ───────────────────────────────
 
 def change_main_model() -> None:
     console.print("\n[bold cyan]═══ Change Main Model (top-level 'model' field) ═══[/bold cyan]\n")
@@ -292,14 +268,10 @@ def change_main_model() -> None:
     update_field("model", choice)
     console.print(f"[green]✓ Main model → {choice}[/green]")
 
-
-# ── backups menu ─────────────────────────────────────────────
-
 def _format_backup_name(p: Path) -> str:
     # settings.json.backup.YYYYMMDD_HHMMSS
     name = p.name.replace(BACKUP_PREFIX, "")
     return name
-
 
 def backup_menu() -> None:
     while True:
@@ -342,7 +314,6 @@ def backup_menu() -> None:
             _clean_flow(backups)
             questionary.text("Press Enter to continue").ask()
 
-
 def _restore_flow(backups: list[Path]) -> None:
     if not backups:
         console.print("[yellow]No backups to restore.[/yellow]")
@@ -368,7 +339,6 @@ def _restore_flow(backups: list[Path]) -> None:
         console.print(f"[green]✓ Restored from {Path(picked).name}[/green]")
     else:
         console.print("[red]Restore failed.[/red]")
-
 
 def _clean_flow(backups: list[Path]) -> None:
     if not backups:
@@ -406,16 +376,12 @@ def _clean_flow(backups: list[Path]) -> None:
             deleted = clean_keep_n(backups, keep)
             console.print(f"[green]✓ Deleted {len(deleted)} backups, kept newest {keep}.[/green]")
     else:
-        # list of indices
-        confirm = questionary.confirm(f"Delete {len(parsed)} backup(s) at {parsed}? ", default=False, style=Q_STYLE).ask()
+                confirm = questionary.confirm(f"Delete {len(parsed)} backup(s) at {parsed}? ", default=False, style=Q_STYLE).ask()
         if not confirm:
             console.print("[dim]Cancelled.[/dim]")
             return
         deleted = clean_backups_by_indices(backups, parsed)
         console.print(f"[green]✓ Deleted {len(deleted)} backup(s).[/green]")
-
-
-# ── update check ─────────────────────────────────────────────
 
 def do_update_check() -> None:
     console.print("\n[bold cyan]═══ Update Check (from GitHub) ═══[/bold cyan]\n")
@@ -433,9 +399,6 @@ def do_update_check() -> None:
         console.print("[dim]Run: pip install --upgrade claudeshift  or  pipx upgrade claudeshift[/dim]")
     else:
         console.print("[green]✓ Already up to date.[/green]")
-
-
-# ── interactive menu ─────────────────────────────────────────
 
 def interactive_menu() -> None:
     while True:
@@ -480,9 +443,6 @@ def interactive_menu() -> None:
             do_update_check()
             questionary.text("Press Enter to continue").ask()
 
-
-# ── CLI entry ────────────────────────────────────────────────
-
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="claudeshift",
@@ -497,7 +457,6 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--install", action="store_true", help="Install hint (pip/pipx)")
     p.add_argument("--uninstall", action="store_true", help="Uninstall hint")
     return p
-
 
 def print_help(parser: argparse.ArgumentParser) -> None:
     console.print(Panel.fit("[bold cyan]ClaudeShift[/bold cyan] — Claude Code Model & Settings Switcher", border_style="cyan"))
@@ -519,7 +478,6 @@ def print_help(parser: argparse.ArgumentParser) -> None:
     console.print("  • Endpoint URL, Auth Token, Main model, Model variants & context")
     console.print("  • Backup / restore / clean (multi-select, all, keep:N)")
     console.print("  • Cross-platform: Windows, Linux, macOS  • Direct CLI + Interactive menu")
-
 
 def main(argv: list[str] | None = None) -> None:
     ensure_settings_file()
@@ -555,8 +513,7 @@ def main(argv: list[str] | None = None) -> None:
         if not model:
             console.print(f"[red]Invalid model: {raw}[/red]")
             sys.exit(1)
-        # If contains context, validate
-        if ctx:
+                if ctx:
             from .settings import parse_tokens
 
             if parse_tokens(ctx) is None:
@@ -566,8 +523,7 @@ def main(argv: list[str] | None = None) -> None:
         console.print(f"[green]✓ Default model → {raw}[/green]")
         return
 
-    # interactive
-    try:
+        try:
         interactive_menu()
     except (KeyboardInterrupt, EOFError):
         console.print("\n[dim]Bye! 👋[/dim]")
